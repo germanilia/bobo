@@ -1,4 +1,4 @@
 aws
 gcp
-azure
-k8s
+az
+kubectl

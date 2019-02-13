@@ -3,13 +3,27 @@ _aws()
 {
   echo "aws - $action: $provider@$profile"
   command="export AWS_PROFILE=$profile"
-  $command
-  echo "Executing: "$command  
+  _executeCommand
 }
 
 _gcp()
 {
   echo "gcp - $action $provider@$profile"
+  command="gcloud config configurations activate $profile"
+  _executeCommand
+}
+
+_kubectl()
+{
+  echo "kubectl - $action $provider@$profile"
+  command="kubectx $profile"
+  _executeCommand
+}
+
+_executeCommand()
+{
+  $command
+  echo "Executing: "$command  
 }
 
 _setEnvVariables()
@@ -18,7 +32,7 @@ _setEnvVariables()
   setBoboProvider="export BOBO_PROVIDER=$provider"
   $setBoboProfile
   $setBoboProvider
-  setPrompt="export PS1=\u@\h:\e[31m($provider-$profile)\e[m "
+  setPrompt="export PS1=\u@\h:\w\e[31m($provider-$profile)\e[m>"
   $setPrompt
 }
 
@@ -37,6 +51,9 @@ case "${provider}" in
     ;;
   "gcp" )
     _gcp
+    ;;
+  "kubectl" )
+    _kubectl
     ;;
 esac
 _setEnvVariables

@@ -17,12 +17,20 @@ _bobo_providers()
       COMPREPLY=($(compgen -W "$actions" "${COMP_WORDS[2]}"))
       ;;
     "4" ) 
-      if [[ ${COMP_WORDS[1]}  == "aws" ]]; then
-         COMPREPLY=($(compgen -W "$(awk '$1~/profile/{split($2,nm,"]"); print nm[1]}' ~/.aws/config)" "${COMP_WORDS[3]}"))
-      fi
-      if [[ ${COMP_WORDS[1]}  == "gcp" ]]; then
-         COMPREPLY=($(compgen -W "$(gcloud auth list --format=text | awk '$1~/account/{print $2}')" "${COMP_WORDS[3]}"))
-      fi
+      case "${COMP_WORDS[1]}" in
+        "aws" )
+          COMPREPLY=($(compgen -W "$(awk '$1~/profile/{split($2,nm,"]"); print nm[1]}' ~/.aws/config)" "${COMP_WORDS[3]}"))
+        ;;
+        "gcp" )
+          COMPREPLY=($(compgen -W "$(gcloud config configurations list --format=text | awk '$1~/name/{print $2}')" "${COMP_WORDS[3]}"))
+        ;;
+        "az" )
+          COMPREPLY=($(compgen -W "$(gcloud config configurations list --format=text | awk '$1~/name/{print $2}')" "${COMP_WORDS[3]}"))
+        ;;
+        "kubectl" )
+          COMPREPLY=($(compgen -W "$(kubectx)" "${COMP_WORDS[3]}"))
+        ;;
+      esac  
       ;;
   esac
 }
