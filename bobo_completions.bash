@@ -29,7 +29,7 @@ _bobo_providers()
           COMPREPLY=($(compgen -W "$(gcloud config configurations list --format=text | awk '$1~/name/{print $2}')" "${COMP_WORDS[3]}"))
         ;;
         "az" )
-          COMPREPLY=($(compgen -W "$(gcloud config configurations list --format=text | awk '$1~/name/{print $2}')" "${COMP_WORDS[3]}"))
+          COMPREPLY=($(compgen -W "$(az account list --all | awk -F: 'BEGIN{name1=""}; $1~/name/&&name1==""{split($0,mm,": ");gsub(",","",mm[2]);gsub(" ","_",mm[2]);name1=mm[2]; next}; $1~/name/&&name1!=""{split($0,mm,": ");gsub(",","",mm[2]);name1=name1"%"mm[2];print name1; name1=""};')" "${COMP_WORDS[3]}"))
         ;;
         "kubectl" )
           COMPREPLY=($(compgen -W "$(kubectx)" "${COMP_WORDS[3]}"))

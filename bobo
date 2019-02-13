@@ -20,6 +20,19 @@ _kubectl()
   _executeCommand
 }
 
+_az()
+{
+  echo "az - $action $provider@$profile"
+  profile=$(echo $profile|awk -F% '{print $1}')
+  prof=$(echo $profile|awk '{gsub("_"," "); print $0}')
+  echo "new profile: $profile"
+  echo "new prof: $prof"
+  subscription_id=$(az account list --all --output table | awk -F"\t" -v pr="$prof" '$1==pr{print $3}')
+  echo "subscription_id: $subscription_id"
+  command="az account set $subscription_id"
+  #_executeCommand
+}
+
 _executeCommand()
 {
   $command
@@ -54,6 +67,9 @@ case "${provider}" in
     ;;
   "kubectl" )
     _kubectl
+    ;;
+  "az" )
+    _az
     ;;
 esac
 _setEnvVariables
