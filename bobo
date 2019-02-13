@@ -27,10 +27,10 @@ _az()
   prof=$(echo $profile|awk '{gsub("_"," "); print $0}')
   echo "new profile: $profile"
   echo "new prof: $prof"
-  subscription_id=$(az account list --all --output table | awk -F"\t" -v pr="$prof" '$1==pr{print $3}')
+  subscription_id=$(az account list --all |awk -F: -v pr="$prof" '$1~/id/{id=$2}; $1~/name/&&$2~pr{gsub(",","",id);gsub("\"","",id); print id}')
   echo "subscription_id: $subscription_id"
-  command="az account set $subscription_id"
-  #_executeCommand
+  command="az account set --subscription $subscription_id"
+  _executeCommand
 }
 
 _executeCommand()
