@@ -1,0 +1,44 @@
+#!/bin/bash
+_aws()
+{
+  echo "aws - $action: $provider@$profile"
+  command="export AWS_PROFILE=$profile"
+  $command
+  echo "Executing: "$command  
+}
+
+_gcp()
+{
+  echo "gcp - $action $provider@$profile"
+}
+
+_setEnvVariables()
+{
+  setBoboProfile="export BOBO_PROFILE=$profile"
+  setBoboProvider="export BOBO_PROVIDER=$provider"
+  $setBoboProfile
+  $setBoboProvider
+  setPrompt="export PS1=\u@\h:\e[31m($provider-$profile)\e[m "
+  $setPrompt
+}
+
+provider=$1
+action=$2
+profile=$3
+
+if [ $# -ne 3 ]; then
+    echo "Wrong params"
+    exit 1
+fi
+
+case "${provider}" in
+  "aws" )
+    _aws
+    ;;
+  "gcp" )
+    _gcp
+    ;;
+esac
+_setEnvVariables
+
+
